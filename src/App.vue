@@ -2,8 +2,9 @@
     <div>
         <div v-if="analyser">
             <canvas-visualizer :audio-analyser="analyser"></canvas-visualizer>
-            <h2>{{note}} {{cents}}</h2>
-
+            <tuner-visualizer :note="note" :pitch="pitch" :cents="cents"></tuner-visualizer>
+            <!--            <h2>{{note}} {{cents}}</h2>-->
+            <VueApexCharts width="500" type="bar" :options="options" :series="series"></VueApexCharts>
         </div>
     </div>
 </template>
@@ -11,10 +12,12 @@
 <script>
     import tuner from "./tuner"
     import CanvasVisualizer from "./components/Canvas-visualizer";
+    import TunerVisualizer from "./components/Tuner-Visualizer";
+    import VueApexCharts from 'vue-apexcharts';
 
     export default {
         name: 'App',
-        components: {CanvasVisualizer},
+        components: {TunerVisualizer, CanvasVisualizer, VueApexCharts},
         data() {
             return {
                 context: null,
@@ -26,8 +29,21 @@
                 buf: null,
                 note: null,
                 pitch: null,
-                cents: null
+                cents: null,
+                options: {
+                    chart: {
+                        id: 'vuechart-example'
+                    },
+                    xaxis: {
+                        categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998]
+                    }
+                },
+                series: [{
+                    name: 'series-1',
+                    data: [30, 40, 45, 50, 49, 60, 70, 91]
+                }]
             }
+
         },
         mounted: function () {
             try {
@@ -70,11 +86,11 @@
                 this.analyser.getFloatTimeDomainData(this.buf);
                 let pitch = tuner.autoCorrelate(this.buf, this.context.sampleRate);
                 let note = tuner.noteFromPitch(pitch);
-                if(pitch !== -1) {
-                    this.note = tuner.noteNamefromNum(tuner.noteFromPitch(pitch));
+                if (pitch !== -1) {
+                    this.note = tuner.noteNameFromNum(tuner.noteFromPitch(pitch));
+                    this.pitch = pitch;
                     this.cents = tuner.centsOffFromPitch(pitch, note);
                 }
-
 
                 if (!window.requestAnimationFrame)
                     window.requestAnimationFrame = window.webkitRequestAnimationFrame;
