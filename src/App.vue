@@ -3,8 +3,6 @@
         <div v-if="analyser">
             <canvas-visualizer :audio-analyser="analyser"></canvas-visualizer>
             <tuner-visualizer :note="note" :pitch="pitch" :cents="cents"></tuner-visualizer>
-            <!--            <h2>{{note}} {{cents}}</h2>-->
-            <VueApexCharts width="500" type="bar" :options="options" :series="series"></VueApexCharts>
         </div>
     </div>
 </template>
@@ -13,11 +11,10 @@
     import tuner from "./tuner"
     import CanvasVisualizer from "./components/Canvas-visualizer";
     import TunerVisualizer from "./components/Tuner-Visualizer";
-    import VueApexCharts from 'vue-apexcharts';
 
     export default {
         name: 'App',
-        components: {TunerVisualizer, CanvasVisualizer, VueApexCharts},
+        components: {TunerVisualizer, CanvasVisualizer},
         data() {
             return {
                 context: null,
@@ -30,18 +27,6 @@
                 note: null,
                 pitch: null,
                 cents: null,
-                options: {
-                    chart: {
-                        id: 'vuechart-example'
-                    },
-                    xaxis: {
-                        categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998]
-                    }
-                },
-                series: [{
-                    name: 'series-1',
-                    data: [30, 40, 45, 50, 49, 60, 70, 91]
-                }]
             }
 
         },
